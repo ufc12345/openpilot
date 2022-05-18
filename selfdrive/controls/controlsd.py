@@ -131,7 +131,8 @@ class Controls:
     elif self.CP.lateralTuning.which() == 'lqr':
       self.LaC = LatControlLQR(self.CP)
 
-    self.state = State.disabled
+    #self.state = State.disabled
+    self.state = True
     self.enabled = False
     self.active = False
     self.can_rcv_error = False
@@ -173,8 +174,8 @@ class Controls:
       self.events.add(EventName.communityFeatureDisallowed, static=True)
     if self.read_only and not passive:
       self.events.add(EventName.carUnrecognized, static=True)
-    if hw_type == HwType.whitePanda:
-      self.events.add(EventName.whitePandaUnsupported, static=True)
+    # if hw_type == HwType.whitePanda:
+    #  self.events.add(EventName.whitePandaUnsupported, static=True)
 
     # controlsd is driven by can recv, expected at 100Hz
     self.rk = Ratekeeper(100, print_delay_threshold=None)
@@ -207,7 +208,8 @@ class Controls:
       self.events.add(EventName.lowMemory)
 
     # Handle calibration status
-    cal_status = self.sm['liveCalibration'].calStatus
+    # cal_status = self.sm['liveCalibration'].calStatus
+    cal_status = 1
     if cal_status != Calibration.CALIBRATED:
       if cal_status == Calibration.UNCALIBRATED:
         self.events.add(EventName.calibrationIncomplete)
@@ -249,8 +251,8 @@ class Controls:
       self.events.add(EventName.noGps)
     if not self.sm['pathPlan'].paramsValid:
       self.events.add(EventName.vehicleModelInvalid)
-    if not self.sm['liveLocationKalman'].posenetOK:
-      self.events.add(EventName.posenetInvalid)
+    # if not self.sm['liveLocationKalman'].posenetOK:
+    #  self.events.add(EventName.posenetInvalid)
     if not self.sm['frame'].recoverState < 2:
       # counter>=2 is active
       self.events.add(EventName.focusRecoverActive)
@@ -377,12 +379,14 @@ class Controls:
           self.v_cruise_kph = initialize_v_cruise(CS.vEgo, CS.buttonEvents, self.v_cruise_kph_last)
 
     # Check if actuators are enabled
-    self.active = self.state == State.enabled or self.state == State.softDisabling
+    # self.active = self.state == State.enabled or self.state == State.softDisabling
+    self.active =True
     if self.active:
       self.current_alert_types.append(ET.WARNING)
 
     # Check if openpilot is engaged
-    self.enabled = self.active or self.state == State.preEnabled
+    # self.enabled = self.active or self.state == State.preEnabled
+    self.enabled = True
 
   def state_control(self, CS):
     """Given the state, this function returns an actuators packet"""
@@ -431,11 +435,12 @@ class Controls:
     if (lac_log.saturated and not CS.steeringPressed) or \
        (self.saturated_count > STEER_ANGLE_SATURATION_TIMEOUT):
       # Check if we deviated from the path
-      left_deviation = actuators.steer > 0 and path_plan.dPoly[3] > 0.15
-      right_deviation = actuators.steer < 0 and path_plan.dPoly[3] < -0.15
-
-      if left_deviation or right_deviation:
-        self.events.add(EventName.steerSaturated)
+     #left_deviation = actuators.steer > 0 and path_plan.dPoly[3] > 0.15
+     left_deviation = True
+     # right_deviation = actuators.steer < 0 and path_plan.dPoly[3] < -0.15
+     right_deviation = True 
+     # if left_deviation or right_deviation:
+     #   self.events.add(EventName.steerSaturated)
 
     return actuators, v_acc_sol, a_acc_sol, lac_log
 
