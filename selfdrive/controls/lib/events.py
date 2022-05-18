@@ -676,13 +676,13 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   },
 
   EventName.canError: {
-    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert(_("CAN Error: Check Connections")),
+    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert(_("CANL1 Error: Check Connections")),
     ET.PERMANENT: Alert(
-      _("CAN Error: Check Connections"),
+      _("CANL2 Error: Check Connections"),
       "",
       AlertStatus.normal, AlertSize.small,
       Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .2, creation_delay=1.),
-    ET.NO_ENTRY: NoEntryAlert(_("CAN Error: Check Connections")),
+    ET.NO_ENTRY: NoEntryAlert(_("CANL3 Error: Check Connections")),
   },
 
   EventName.steerUnavailable: {
