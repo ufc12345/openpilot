@@ -256,7 +256,8 @@ class PIControllerk_f:
     self.speed = speed
 
     error = float(apply_deadzone(setpoint - measurement, deadzone))
-    self.p = error * self.k_p
+    #self.p = error * self.k_p
+    self.p = error * 0.02
     d = self.k_d * (error - self.last_error)
     self.f = feedforward * self.k_f
 
@@ -276,7 +277,8 @@ class PIControllerk_f:
          not freeze_integrator:
         self.i = i
 
-    control = self.p + self.f + self.i + d
+    #control = self.p + self.f + self.i + d
+    control = self.p
     if self.convert is not None:
       control = self.convert(control, speed=self.speed)
 
